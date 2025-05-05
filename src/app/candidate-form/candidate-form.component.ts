@@ -12,6 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { Candidate, CandidateService } from '../services/candidate.service';
 import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-candidate-form',
@@ -97,10 +98,10 @@ export class CandidateFormComponent {
         }
     }
 
-    submit() {
+    async submit() {
         if (this.form.valid) {
             const candidate = this.form.getRawValue();
-            this.candidateService.addCandidate(candidate as Candidate);
+            await lastValueFrom(this.candidateService.addCandidate(candidate as Candidate));
             this.router.navigate(['/list']);
         }
     }

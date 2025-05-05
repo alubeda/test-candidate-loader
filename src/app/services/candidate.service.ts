@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 export interface Candidate {
     name: string;
@@ -13,18 +14,15 @@ export interface Candidate {
     providedIn: 'root'
 })
 export class CandidateService {
-    private candidates: Candidate[] = [
-        { name: 'Alice', surname: 'Smith', seniority: 'junior', yearsOfExperience: 2, availability: true },
-        { name: 'Bob', surname: 'Jones', seniority: 'senior', yearsOfExperience: 5, availability: false },
-    ];
+    private apiUrl = 'http://localhost:3000/candidates';
 
-    constructor() {}
+    constructor(private http: HttpClient) {}
 
     getCandidates(): Observable<Candidate[]> {
-        return of(this.candidates);
+        return this.http.get<Candidate[]>(this.apiUrl);
     }
 
-    addCandidate(candidate: Candidate): void {
-        this.candidates.push(candidate);
+    addCandidate(candidate: Candidate): Observable<Candidate> {
+        return this.http.post<Candidate>(this.apiUrl, candidate);
     }
 }

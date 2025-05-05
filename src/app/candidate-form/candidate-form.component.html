@@ -9,5 +9,24 @@
         <input matInput formControlName="surname" required>
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+        <mat-label>Seniority</mat-label>
+        <mat-select formControlName="seniority" required>
+            <mat-option value="junior">Junior</mat-option>
+            <mat-option value="senior">Senior</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Years of Experience</mat-label>
+        <input matInput formControlName="yearsOfExperience" type="number" required>
+    </mat-form-field>
+
+    <div class="checkbox-container">
+        <mat-checkbox formControlName="availability">Available</mat-checkbox>
+    </div>
+
+    <input type="file" (change)="onFileChange($event)">
+
     <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Send</button>
 </form>

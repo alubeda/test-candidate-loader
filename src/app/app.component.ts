@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CandidateFormComponent } from './candidate-form/candidate-form.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.less'
+  standalone: true,
+  imports: [CandidateFormComponent],
+  template: '<app-candidate-form></app-candidate-form>',
 })
 export class AppComponent {
   title = 'candidate-loader';

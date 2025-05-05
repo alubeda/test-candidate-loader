@@ -10,6 +10,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { Candidate, CandidateService } from '../services/candidate.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-candidate-form',
@@ -32,6 +34,11 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 export class CandidateFormComponent {
     private fb = inject(FormBuilder);
+
+    constructor(
+        private candidateService: CandidateService,
+        private router: Router
+    ) {}
 
     form = this.fb.group({
         name: ['', Validators.required],
@@ -92,7 +99,9 @@ export class CandidateFormComponent {
 
     submit() {
         if (this.form.valid) {
-            console.warn('Valid form', this.form.getRawValue());
+            const candidate = this.form.getRawValue();
+            this.candidateService.addCandidate(candidate as Candidate);
+            this.router.navigate(['/list']);
         }
     }
 }

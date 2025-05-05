@@ -1,32 +1,70 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="form-container">
+    <div class="spinner-overlay" *ngIf="isLoading">
+        <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
+    </div>
+
     <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" required>
+        <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Surname</mat-label>
         <input matInput formControlName="surname" required>
+        <mat-error *ngIf="form.get('surname')?.hasError('required')">Surname is required</mat-error>
     </mat-form-field>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Excel upload instructions</mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>The Excel file must:</p>
+        <ul>
+            <li>Be a single-row <strong>.xlsx</strong> file</li>
+            <li>Have <strong>no header</strong></li>
+            <li>Contain exactly 3 cells:
+                <ul>
+                    <li>Seniority: "junior" or "senior"</li>
+                    <li>Years of experience: number ≥ 0</li>
+                    <li>Availability: 1 for true, 0 for false</li>
+                </ul>
+            </li>
+            <li>If there are more rows or columns, they will be discarded</li>
+        </ul>
+    </mat-expansion-panel>
+
+    <div class="file-upload-container">
+        <button type="button" mat-raised-button color="primary" (click)="fileInput.click()">Choose File</button>
+        <input type="file" accept=".xlsx" (change)="onFileChange($event)" #fileInput hidden>
+        <span *ngIf="fileName" class="file-name">{{ fileName }}</span>
+    </div>
+
+    <mat-card *ngIf="excelError" class="alert alert-danger">
+        <mat-card-content>
+            <mat-icon color="warn">error</mat-icon>
+            <span>{{ excelError }}</span>
+        </mat-card-content>
+    </mat-card>
 
     <mat-form-field appearance="outline">
         <mat-label>Seniority</mat-label>
-        <mat-select formControlName="seniority" required>
-            <mat-option value="junior">Junior</mat-option>
-            <mat-option value="senior">Senior</mat-option>
-        </mat-select>
+        <input matInput formControlName="seniority" required readonly class="read-only-form-control">
+        <mat-error *ngIf="form.get('seniority')?.hasError('required')">Seniority is required</mat-error>
+        <mat-error *ngIf="form.get('seniority')?.hasError('pattern')">Only "junior" or "senior" are allowed.</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Years of Experience</mat-label>
-        <input matInput formControlName="yearsOfExperience" type="number" required>
+        <input matInput formControlName="yearsOfExperience" type="number" required readonly class="read-only-form-control">
+        <mat-error *ngIf="form.get('yearsOfExperience')?.hasError('required')">Years of Experience is required</mat-error>
+        <mat-error *ngIf="form.get('yearsOfExperience')?.hasError('min')">Years of Experience must be greater than 0</mat-error>
     </mat-form-field>
 
     <div class="checkbox-container">
-        <mat-checkbox formControlName="availability">Available</mat-checkbox>
+        <mat-checkbox formControlName="availability" (click)="$event.preventDefault()" class="read-only-form-control">Available</mat-checkbox>
+        <mat-error *ngIf="form.get('availability')?.hasError('required')">Availability is required, either 1 or 0</mat-error>
     </div>
-
-    <input type="file" (change)="onFileChange($event)">
 
     <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Send</button>
 </form>

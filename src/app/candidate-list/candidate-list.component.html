@@ -1,0 +1,44 @@
+<div class="candidate-list-container">
+    <h2>Candidate list</h2>
+
+    <mat-card *ngIf="candidates.length === 0">
+        <mat-card-content>
+            <p>No candidates available.</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-table [dataSource]="candidates">
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-cell *matCellDef="let candidate">{{ candidate.name }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="surname">
+            <mat-header-cell *matHeaderCellDef>Surname</mat-header-cell>
+            <mat-cell *matCellDef="let candidate">{{ candidate.surname }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="seniority">
+            <mat-header-cell *matHeaderCellDef>Seniority</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.seniority | seniorityLabel }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="yearsOfExperience">
+            <mat-header-cell *matHeaderCellDef>Years</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.yearsOfExperience }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="availability">
+            <mat-header-cell *matHeaderCellDef>Available</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-icon color="{{ element.availability ? 'primary' : 'warn' }}">
+                    {{ element.availability ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+</div>
+

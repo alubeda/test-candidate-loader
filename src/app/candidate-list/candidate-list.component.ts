@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { SeniorityLabelPipe } from '../shared/pipes/seniority-label.pipe';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
     selector: 'app-candidate-list',

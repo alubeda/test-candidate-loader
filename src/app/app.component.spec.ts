@@ -1,29 +1,41 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { RouterModule, ActivatedRoute } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { DebugElement } from '@angular/core';
+
+class MockActivatedRoute {
+    snapshot = {
+        data: {
+            title: 'candidate-loader',
+        },
+    };
+}
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
-  });
+    let fixture: ComponentFixture<AppComponent>;
+    let component: AppComponent;
+    let de: DebugElement;
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [AppComponent, RouterModule, MatToolbarModule, MatButtonModule],
+            providers: [{ provide: ActivatedRoute, useClass: MockActivatedRoute }],
+        }).compileComponents();
 
-  it(`should have the 'candidate-loader' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('candidate-loader');
-  });
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        de = fixture.debugElement;
+    });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, candidate-loader');
-  });
+    it('should create the app', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it(`should have the 'candidate-loader' title`, () => {
+        fixture.detectChanges();
+        const titleElement = de.query(By.css('mat-toolbar'));
+        expect(titleElement.nativeElement.textContent).toContain('candidate-loader');
+    });
 });

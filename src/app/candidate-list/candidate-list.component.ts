@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { SeniorityLabelPipe } from '../shared/pipes/seniority-label.pipe';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { catchError, of } from 'rxjs';
 
 @Component({
     selector: 'app-candidate-list',
@@ -15,6 +17,7 @@ import { SeniorityLabelPipe } from '../shared/pipes/seniority-label.pipe';
         MatCardModule,
         MatIconModule,
         SeniorityLabelPipe,
+        MatProgressSpinnerModule,
     ],
     templateUrl: './candidate-list.component.html',
     styleUrl: './candidate-list.component.less'
@@ -22,12 +25,26 @@ import { SeniorityLabelPipe } from '../shared/pipes/seniority-label.pipe';
 export class CandidateListComponent {
     public candidates: Candidate[] = [];
     public displayedColumns: string[] = ['name', 'surname', 'seniority', 'yearsOfExperience', 'availability'];
+    public isLoading: boolean = false;
+    public error: string | null = null;
 
     constructor(private candidateService: CandidateService) {}
 
     ngOnInit(): void {
-        this.candidateService.getCandidates().subscribe((data: any) => {
-            this.candidates = data;
-        });
+        this.isLoading = true;
+        this.error = null;
+
+        this.candidateService.getCandidates()
+            .pipe(
+                catchError(error => {
+                    this.isLoading = false;
+                    this.error = 'Failed to load candidates. Please try again later.';
+
+                    return of([]);
+                })
+            ).subscribe((data: any) => {
+                this.candidates = data;
+                this.isLoading = false;
+            });
     }
 }
